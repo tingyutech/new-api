@@ -27,6 +27,7 @@ import (
 	"github.com/QuantumNous/new-api/relay/channel/openai"
 	"github.com/QuantumNous/new-api/relay/channel/palm"
 	"github.com/QuantumNous/new-api/relay/channel/perplexity"
+	"github.com/QuantumNous/new-api/relay/channel/proxy"
 	"github.com/QuantumNous/new-api/relay/channel/replicate"
 	"github.com/QuantumNous/new-api/relay/channel/siliconflow"
 	"github.com/QuantumNous/new-api/relay/channel/submodel"
@@ -76,6 +77,8 @@ func GetAdaptor(apiType int) channel.Adaptor {
 		return &ollama.Adaptor{}
 	case constant.APITypePerplexity:
 		return &perplexity.Adaptor{}
+	case constant.APITypePassthrough:
+		return &proxy.Adaptor{}
 	case constant.APITypeAws:
 		return &aws.Adaptor{}
 	case constant.APITypeCohere:

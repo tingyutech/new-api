@@ -14,6 +14,7 @@ const (
 	APITypeZhipuV4
 	APITypeOllama
 	APITypePerplexity
+	APITypePassthrough
 	APITypeAws
 	APITypeCohere
 	APITypeDify

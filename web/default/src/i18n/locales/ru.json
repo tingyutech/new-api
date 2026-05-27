@@ -2834,6 +2834,7 @@
     "Passkey registration was cancelled": "Регистрация Passkey была отменена",
     "Passkey removed successfully": "Passkey успешно удалён",
     "Passkey reset successfully": "Passkey успешно сброшен",
+    "Passthrough": "Прокси",
     "Passthrough Template": "Шаблон сквозной передачи",
     "Password": "Пароль",
     "Password / Access Token": "Пароль / Токен доступа",

@@ -29,6 +29,7 @@ const (
 	ChannelTypeMoonshot       = 25
 	ChannelTypeZhipu_v4       = 26
 	ChannelTypePerplexity     = 27
+	ChannelTypePassthrough    = 28
 	ChannelTypeLingYiWanWu    = 31
 	ChannelTypeAws            = 33
 	ChannelTypeCohere         = 34
@@ -149,6 +150,7 @@ var ChannelTypeNames = map[int]string{
 	ChannelTypeMoonshot:       "Moonshot",
 	ChannelTypeZhipu_v4:       "ZhipuV4",
 	ChannelTypePerplexity:     "Perplexity",
+	ChannelTypePassthrough:    "Passthrough",
 	ChannelTypeLingYiWanWu:    "LingYiWanWu",
 	ChannelTypeAws:            "AWS",
 	ChannelTypeCohere:         "Cohere",

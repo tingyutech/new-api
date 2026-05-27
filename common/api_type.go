@@ -31,6 +31,8 @@ func ChannelType2APIType(channelType int) (int, bool) {
 		apiType = constant.APITypeOllama
 	case constant.ChannelTypePerplexity:
 		apiType = constant.APITypePerplexity
+	case constant.ChannelTypePassthrough:
+		apiType = constant.APITypePassthrough
 	case constant.ChannelTypeAws:
 		apiType = constant.APITypeAws
 	case constant.ChannelTypeCohere:
