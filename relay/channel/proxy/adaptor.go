@@ -4,10 +4,13 @@ import (
 	"bytes"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/QuantumNous/new-api/common"
+	"github.com/QuantumNous/new-api/constant"
 	"github.com/QuantumNous/new-api/dto"
+	"github.com/QuantumNous/new-api/model"
 	"github.com/QuantumNous/new-api/relay/channel"
 	"github.com/QuantumNous/new-api/relay/channel/claude"
 	"github.com/QuantumNous/new-api/relay/channel/gemini"
@@ -18,6 +21,12 @@ import (
 	"github.com/QuantumNous/new-api/types"
 
 	"github.com/gin-gonic/gin"
+)
+
+const (
+	trackingHeaderRequestId = "X-NewApi-Request-Id"
+	trackingHeaderUser      = "X-NewApi-User"
+	trackingHeaderUserId    = "X-NewApi-User-Id"
 )
 
 type Adaptor struct{}
@@ -42,7 +51,47 @@ func (a *Adaptor) SetupRequestHeader(c *gin.Context, header *http.Header, info *
 	if !hasAuthOverride {
 		header.Set("Authorization", "Bearer "+info.ApiKey)
 	}
+	setupTrackingHeaders(c, header)
 	return nil
+}
+
+func setupTrackingHeaders(c *gin.Context, header *http.Header) {
+	if c == nil || header == nil {
+		return
+	}
+	if requestId := c.GetString(common.RequestIdKey); requestId != "" {
+		header.Set(trackingHeaderRequestId, requestId)
+	}
+	userIdVal, exists := c.Get(string(constant.ContextKeyUserId))
+	userId := 0
+	if exists {
+		switch v := userIdVal.(type) {
+		case int:
+			userId = v
+		case int64:
+			userId = int(v)
+		}
+	}
+	if userId > 0 {
+		header.Set(trackingHeaderUserId, strconv.Itoa(userId))
+	}
+	username := c.GetString(string(constant.ContextKeyUserName))
+	if username == "" {
+		username = c.GetString("username")
+	}
+	if username == "" && userId > 0 {
+		func() {
+			defer func() {
+				_ = recover()
+			}()
+			if resolved, err := model.GetUsernameById(userId, false); err == nil && resolved != "" {
+				username = resolved
+			}
+		}()
+	}
+	if username != "" {
+		header.Set(trackingHeaderUser, username)
+	}
 }
 
 func (a *Adaptor) ConvertOpenAIRequest(c *gin.Context, info *relaycommon.RelayInfo, request *dto.GeneralOpenAIRequest) (any, error) {

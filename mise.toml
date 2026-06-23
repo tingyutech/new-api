@@ -1,2 +1,11 @@
 [tools]
 bun = "latest"
+
+[env.'_']
+file = ".env"
+
+[tasks.build]
+run = "docker build . -t ${TY_IMAGE}:latest --build-arg http_proxy --build-arg https_proxy --build-arg GOPROXY=goproxy.cn,direct"
+
+[tasks.push]
+run = "tag=$(date +'%Y%m%d%H%M%S') && skopeo copy --dest-username=$TY_REGISTRY_USERNAME --dest-password=$TY_REGISTRY_PASSWORD docker-daemon:${TY_IMAGE}:latest docker://${TY_IMAGE}:${tag} && echo ${TY_IMAGE}:${tag}"
