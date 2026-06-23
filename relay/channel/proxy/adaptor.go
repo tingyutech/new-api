@@ -182,7 +182,10 @@ func (a *Adaptor) DoResponse(c *gin.Context, resp *http.Response, info *relaycom
 			apiErr, usage := openai.OpenaiSTTHandler(c, resp, info, "")
 			return usage, apiErr
 		case relayconstant.RelayModeImagesGenerations, relayconstant.RelayModeImagesEdits:
-			return openai.OpenaiHandlerWithUsage(c, info, resp)
+			if info.IsStream {
+				return openai.OpenaiImageStreamHandler(c, info, resp)
+			}
+			return openai.OpenaiImageHandler(c, info, resp)
 		case relayconstant.RelayModeRerank:
 			return common_handler.RerankHandler(c, info, resp)
 		default:
